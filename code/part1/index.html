@@ -7,6 +7,16 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <!-- canvas渲染标签 -->
+    <canvas id="canvas"></canvas>
 </body>
+<script>
+    // 获取canvas标签
+    const canvas = document.getElementById('canvas')
+    // 设置canvas大小和浏览器视口大小相同
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // 设置webgl渲染模式
+    const lg = canvas.getContext('webgl')
+</script>
 </html>
