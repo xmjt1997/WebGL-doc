@@ -27,9 +27,9 @@
     canvas.height = window.innerHeight;
     // 设置webgl渲染模式
     const gl = canvas.getContext('webgl')
-    // //设置底色
+    // 设置底色
     gl.clearColor(255,0,0,1) //rgba颜色格式(r,g,b,a)
-    // // 刷底色
+    // 刷底色
     gl.clear(gl.COLOR_BUFFER_BIT)
 
     /* 
@@ -44,7 +44,31 @@
         gl.clearColor(r,g,b,a) //rgba颜色格式(r,g,b,a)
         gl.clear(gl.COLOR_BUFFER_BIT)
     */
+</script>
+<script type="module">
+    // 通过 three.js库中导出的Color方法来定义颜色
+    import { Color } from "https://unpkg.com/three/build/three.module.js";
+    /* 
+        Color构造函数支持以下格式的颜色表达式
+        1、(0xff0000) // 16进制
+        2、("rgb(255, 0, 0)") // rgb类型
+        3、("rgb(100%, 0%, 0%)") // rgb百分比
+        4、('skyblue') // 英文名称
+        5、("hsl(0, 100%, 50%)") // hsl
+        6、(1, 0, 0) // 0-1
+    */
+    //通过Color构造函数 x.r x.g x.b 刷底色
+    // const threeColor = new Color(1,0,0)
+    // const threeColor = new Color(0xffff00)
+    // gl.clearColor(threeColor.r,threeColor.g,threeColor.b,1)
+    // gl.clear(gl.COLOR_BUFFER_BIT)
     
-
+    // 建立色相偏移动画
+    // !(function ani(){
+    //     threeColor.offsetHSL(0.0,0.0,0.0)
+    //     gl.clearColor(threeColor.r,threeColor.g,threeColor.b,1)
+    //     gl.clear(gl.COLOR_BUFFER_BIT)
+    //     window.requestAnimationFrame(ani)
+    // })()
 </script>
 </html>
