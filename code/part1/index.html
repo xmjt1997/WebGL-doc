@@ -5,6 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
     <!-- canvas渲染标签 -->
@@ -17,6 +26,25 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     // 设置webgl渲染模式
-    const lg = canvas.getContext('webgl')
+    const gl = canvas.getContext('webgl')
+    // //设置底色
+    gl.clearColor(255,0,0,1) //rgba颜色格式(r,g,b,a)
+    // // 刷底色
+    gl.clear(gl.COLOR_BUFFER_BIT)
+
+    /* 
+        // CSS 颜色转换到webgl原理
+        const cssColor = 'rgba(0,0,0,1)'
+        const reg = RegExp(/\((.*)\)/)
+        const colorAry = reg.exec(cssColor)[1].split(',').map((e)=> parseInt(e))
+        const r = colorAry[0] / 255
+        const g = colorAry[1] / 255
+        const b = colorAry[2] / 255
+        const a = colorAry[3]
+        gl.clearColor(r,g,b,a) //rgba颜色格式(r,g,b,a)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+    */
+    
+
 </script>
 </html>
