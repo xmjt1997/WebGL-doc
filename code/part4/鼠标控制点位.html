@@ -5,8 +5,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
-    
+    <canvas id="webgl"></canvas>
 </body>
+<script id="vertexShader" type="x-shader/x-vertex">
+    attribute vec4 a_Position;
+    void main(){
+        gl_Position = a_Position;
+        gl_PointSize = 50.0; //控制顶点大小
+    }
+</script>
+<script id="fragmentShader" type="x-shader/x-fragment">
+    void main(){
+        gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+    }
+
+</script>
+<script type="module">
+    import {initShaders} from "../tools/initShaders.js"
+    const canvas = document.getElementById('webgl')
+    const vsSource = document.getElementById('vertexShader').innerHTML
+    const fsSource = document.getElementById('fragmentShader').innerHTML
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    const gl = canvas.getContext('webgl')
+    initShaders(gl,vsSource,fsSource)
+    const a_Position = gl.getAttribLocation(gl.program,'a_Position')
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    canvas.addEventListener('click',function(e){
+        // 1、获取鼠标点击的视口坐标
+        const clientX = e.clientX,
+              clientY = e.clientY
+        // 2、获取canvas的坐标原点和宽高
+        const {left,top,width,height} = canvas.getBoundingClientRect()
+        // 3、计算鼠标点击位置在canvas的向量坐标
+        const [canvasX,canvasY] = [clientX-left,clientY-top]
+        // 4、获取webgl坐标系的原点坐标
+        const halfwidth = width/2
+        const halfheight = height/2
+        // 5、把canvas的向量坐标换算成webgl中的坐标 y轴坐标的正负取反
+        const [glX,glY] = [canvasX-halfwidth,-(canvasY-halfheight)]
+        // 6、把向量坐标除去webgl的单位长度
+        const [x,y] = [glX/halfwidth,glY/halfheight]
+        // 定义 顶点坐标的x y值
+        gl.vertexAttrib2f(a_Position,x,y)
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.POINTS, 0, 1)
+    })
+</script>
 </html>
