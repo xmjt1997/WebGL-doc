@@ -43,6 +43,7 @@
     const a_Position = gl.getAttribLocation(gl.program,'a_Position')
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.Position,0,1)
     canvas.addEventListener('click',function(e){
         // 1、获取鼠标点击的视口坐标
         const clientX = e.clientX,
