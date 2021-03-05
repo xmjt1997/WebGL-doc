@@ -76,19 +76,19 @@
     // 异步
     setTimeout(()=>{
         vertexList.push({x:0,y:0.3})
-        render(vertexList)
+        render()
     },1000)
 
     // 点击事件触发
     canvas.addEventListener('click',()=>{
         vertexList.push({x:0,y:-0.3})
-        render(vertexList)
+        render()
     })
 
     // 渲染函数
-    function render(list){
+    function render(){
         gl.clear(gl.COLOR_BUFFER_BIT);
-        list.forEach(({x,y})=>{
+        vertexList.forEach(({x,y})=>{
             gl.vertexAttrib2f(a_Position,x,y)
             gl.drawArrays(a_Position,0,1)
         })
