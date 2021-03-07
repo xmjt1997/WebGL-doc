@@ -46,6 +46,11 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     const gl = canvas.getContext("webgl");
+    // 开启片元颜色合成功能
+    gl.enable(gl.BLEND);
+    // 设置片元合成的模式
+    gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+
 
     const vsSource = document.getElementById("vertextShader").innerHTML;
     const fsSource = document.getElementById("fragmentShader").innerHTML;
@@ -102,15 +107,15 @@
 
     // 随机生成大小函数
     function randomSize(){
-        const size = Math.ceil((Math.random()*100)).toFixed(1);
+        const size = Math.ceil((Math.random()*10)).toFixed(1);
         return size
     }
     // 随机生成颜色函数
     function randomColor(){
-        let r = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
-        let g = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
-        let b = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
-        let a = 1
+        let r = 1.0 
+        let g = 1.0
+        let b = 1.0
+        let a = Number(Math.random().toFixed(1)) 
         const color = {r:r,g:g,b:b,a:a}
         return color
     }
