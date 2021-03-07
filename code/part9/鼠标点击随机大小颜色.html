@@ -86,7 +86,10 @@
         vertexList.forEach(({ x, y, s ,c }) => {
             gl.vertexAttrib2f(a_Position, x, y);
             gl.vertexAttrib1f(a_PointSize, s);
-            gl.uniform4f(u_FragColor,c.r,c.g,c.b,c.a);
+            // uniform4fv 第二个参数可以是一个Float32Array类型的数组
+            const arr = new Float32Array([c.r,c.g,c.b,c.a])
+            gl.uniform4fv(u_FragColor,arr)
+            // gl.uniform4f(u_FragColor,c.r,c.g,c.b,c.a);
             gl.drawArrays(gl.POINTS, 0, 1);
         });
     }
@@ -102,6 +105,7 @@
         let g = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
         let b = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
         let a = 1
+        const color = {r:r,g:g,b:b,a:a}
         return color
     }
   </script>
