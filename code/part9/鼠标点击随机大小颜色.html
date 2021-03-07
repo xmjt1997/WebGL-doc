@@ -28,9 +28,11 @@
     }
   </script>
   <script id="fragmentShader" type="x-shader/x-fragment">
+    precision mediump float;
+    uniform vec4 u_FragColor;
     void main(){
-        gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
-    }
+        gl_FragColor = u_FragColor;
+  }
   </script>
   <script type="module">
     import { initShaders } from "../tools/initShaders.js";
@@ -46,6 +48,7 @@
 
     const a_Position = gl.getAttribLocation(gl.program, "a_Position");
     const a_PointSize = gl.getAttribLocation(gl.program, "a_PointSize");
+    const u_FragColor = gl.getUniformLocation(gl.program,'u_FragColor');
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -73,22 +76,33 @@
       render({ x: x, y: y });
     });
 
+
     // 渲染函数
     function render({ x, y }) {
         gl.clear(gl.COLOR_BUFFER_BIT);
-        const size = random()
-        vertexList.push({ x: x, y: y, s:size });
-        vertexList.forEach(({ x, y, s }) => {
+        const size = randomSize()
+        const color = randomColor()
+        vertexList.push({ x: x, y: y, s:size, c:color });
+        vertexList.forEach(({ x, y, s ,c }) => {
             gl.vertexAttrib2f(a_Position, x, y);
             gl.vertexAttrib1f(a_PointSize, s);
+            gl.uniform4f(u_FragColor,c.r,c.g,c.b,c.a);
             gl.drawArrays(gl.POINTS, 0, 1);
         });
     }
 
-    // 随机生成函数
-    function random(){
+    // 随机生成大小函数
+    function randomSize(){
         const size = Math.ceil((Math.random()*100)).toFixed(1);
         return size
+    }
+    // 随机生成颜色函数
+    function randomColor(){
+        let r = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
+        let g = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
+        let b = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
+        let a = 1
+        return color
     }
   </script>
 </html>
