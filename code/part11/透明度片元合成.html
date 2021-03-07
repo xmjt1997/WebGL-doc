@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="webgl"></canvas>
+  </body>
+  <script id="vertextShader" type="x-shader/x-vertex">
+    attribute vec4 a_Position;
+    attribute float a_PointSize;
+    void main(){
+        gl_Position = a_Position;
+        gl_PointSize = a_PointSize;
+    }
+  </script>
+  <script id="fragmentShader" type="x-shader/x-fragment">
+    precision mediump float;
+    uniform vec4 u_FragColor;
+    void main(){
+        //定义一个dist变量作为绘制像素点到顶点轴心的距离
+        float dist = distance(gl_PointCoord,vec2(0.5,0.5));
+        if(dist<0.5){
+            gl_FragColor = u_FragColor;
+        }else{
+          discard;
+        }
+  }
+  </script>
+  <script type="module">
+    import { initShaders } from "../tools/initShaders.js";
+    const canvas = document.getElementById("webgl");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const gl = canvas.getContext("webgl");
+
+    const vsSource = document.getElementById("vertextShader").innerHTML;
+    const fsSource = document.getElementById("fragmentShader").innerHTML;
+
+    initShaders(gl, vsSource, fsSource);
+
+    const a_Position = gl.getAttribLocation(gl.program, "a_Position");
+    const a_PointSize = gl.getAttribLocation(gl.program, "a_PointSize");
+    const u_FragColor = gl.getUniformLocation(gl.program,'u_FragColor');
+
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    /* 
+        1、鼠标点击生成顶点
+        2、顶点的尺寸大小是随机的
+    */
+    const vertexList = [];
+    // 生成一个顶点
+    canvas.addEventListener("click", (e) => {
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+
+      const { left, top, width, height } = canvas.getBoundingClientRect();
+
+      const [canvasX, canvasY] = [clientX - left, clientY - top];
+
+      const [halfWidth, halfHeight] = [width / 2, height / 2];
+
+      const [glX, glY] = [canvasX - halfWidth, -(canvasY - halfHeight)];
+
+      const [x, y] = [glX / halfWidth, glY / halfHeight];
+
+      render({ x: x, y: y });
+    });
+
+
+    // 渲染函数
+    function render({ x, y }) {
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        const size = randomSize()
+        const color = randomColor()
+        vertexList.push({ x: x, y: y, s:size, c:color });
+        vertexList.forEach(({ x, y, s ,c }) => {
+            gl.vertexAttrib2f(a_Position, x, y);
+            gl.vertexAttrib1f(a_PointSize, s);
+            // uniform4fv 第二个参数可以是一个Float32Array类型的数组
+            const arr = new Float32Array([c.r,c.g,c.b,c.a])
+            gl.uniform4fv(u_FragColor,arr)
+            // gl.uniform4f(u_FragColor,c.r,c.g,c.b,c.a);
+            gl.drawArrays(gl.POINTS, 0, 1);
+        });
+    }
+
+    // 随机生成大小函数
+    function randomSize(){
+        const size = Math.ceil((Math.random()*100)).toFixed(1);
+        return size
+    }
+    // 随机生成颜色函数
+    function randomColor(){
+        let r = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
+        let g = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
+        let b = Number((Math.ceil((Math.random()*255))/255).toFixed(1)) 
+        let a = 1
+        const color = {r:r,g:g,b:b,a:a}
+        return color
+    }
+  </script>
+</html>
